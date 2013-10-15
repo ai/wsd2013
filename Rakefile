@@ -28,7 +28,7 @@ end
 
 Slide = Struct.new(:name, :title, :types, :html, :file) do
   def style
-    file.dirname.basename.join("#{name}.css.sass")
+    file.dirname.basename.join("#{name}.css")
   end
 
   def name
@@ -102,7 +102,7 @@ class Builder
     if standalone?
       uri = encode_image(uri, type)
     else
-      uri = uri.to_s.gsub(ROOT.to_s + '/', '')
+      uri = uri.to_s.gsub(SLIDES.to_s, '')
     end
     attrs = attrs.map { |k, v| "#{k}=\"#{v}\"" }.join(' ')
     "<img src=\"#{ uri }\" #{ attrs } />"
@@ -117,7 +117,7 @@ class Builder
   end
 
   def cover(name)
-    @types += ' cover'
+    @types += ' cover h'
     @cover  = name
   end
 
@@ -197,16 +197,14 @@ task :server do
       send_file PUBLIC.join('index.html')
     end
 
-    get '/*.js' do |path|
-      path = path + '.js'
-      content_type 'text/javascript'
-      builder.assets[path].to_s
-    end
-
-    get '/*.css' do |path|
-      path = path + '.css'
-      content_type 'text/css'
-      builder.assets[path].to_s
+    assets = { js:  'text/javascript', css: 'text/css',
+               png: 'image/png',       jpg: 'image/jpeg' }
+    assets.each_pair do |ext, mime|
+      get "/*.#{ ext }" do |path|
+        path = path + ".#{ ext }"
+        content_type mime
+        builder.assets[path].to_s
+      end
     end
 
     def builder
