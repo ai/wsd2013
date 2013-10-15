@@ -338,7 +338,8 @@ a {
 		position:absolute;
 		clip:rect(0, auto, auto, 0); // Having fun with IE10
 		padding:50px 0 50px 50px;
-		background:#E2E2E2;
+		background:#E2E2E2 inline("bright/mesh.png") 50% 0;
+		background-size:256px;
 		text-align:center;
 		// Outfit
 		.caption,

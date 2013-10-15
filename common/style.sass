@@ -1,5 +1,8 @@
 @import "bright/screen"
 
+.caption
+  color: black
+
 .caption a, a
   display: inline-block
   line-height: 1.1
@@ -7,5 +10,10 @@
   &:hover
     border-bottom: 0.05em solid #52a2df
 
-.list
-  background: inline("noise.jpg")
+.slide::after
+  display: none
+
+.slide > div
+  padding-top: 80px
+  height: 560px
+z
