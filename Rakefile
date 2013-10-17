@@ -192,14 +192,17 @@ task :server do
   require 'sinatra/base'
 
   class WebSlides < Sinatra::Base
+    set :lock, true
+
     get '/' do
       builder.build!
       send_file PUBLIC.join('index.html')
     end
 
-    assets = { js:  'text/javascript', css: 'text/css',
-               png: 'image/png',       jpg: 'image/jpeg' }
-    assets.each_pair do |ext, mime|
+    {
+      css: 'text/css',  js:  'text/javascript',
+      png: 'image/png', jpg: 'image/jpeg'
+    }.each_pair do |ext, mime|
       get "/*.#{ ext }" do |path|
         path = path + ".#{ ext }"
         content_type mime
