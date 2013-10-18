@@ -103,6 +103,7 @@ class Builder
       uri = encode_image(uri, type)
     else
       uri = uri.to_s.gsub(SLIDES.to_s, '')
+      uri = './slides' + uri if production?
     end
     attrs = attrs.map { |k, v| "#{k}=\"#{v}\"" }.join(' ')
     "<img src=\"#{ uri }\" #{ attrs } />"
