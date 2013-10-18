@@ -1,11 +1,12 @@
 @import "bright/screen"
+@import "evil-front"
 
 .caption
   color: black
 
-.caption a, a
+.caption a, .slide a
   display: inline-block
-  line-height: 1.1
+  line-height: 1.2
   border-bottom: 0.05em solid rgba(#52a2df, 0.4)
   &:hover
     border-bottom: 0.05em solid #52a2df
@@ -16,4 +17,40 @@
 .slide > div
   padding-top: 80px
   height: 560px
-z
+
+.cover h2
+  font-family: "Open Sans"
+  color: white
+  +stroke-text(black)
+
+.chapter-slide
+  h2
+    position: relative
+    font-size: 40px
+    strong
+      display: block
+      font-weight: normal
+      font-size: 80px
+      line-height: 1
+      position: relative
+      top: 10px
+      left: -4px
+
+.slide.important
+  h2
+    font-size: 60px
+    strong
+      display: block
+      font-size: 100px
+      padding-top: 20px
+      line-height: 1.1
+
+.slide
+  .compile-from, .compile-to
+    font-size: 100%
+  .compile-from
+    float: left
+    margin-left: -40px
+  .compile-to
+    float: right
+    margin-right: -40px

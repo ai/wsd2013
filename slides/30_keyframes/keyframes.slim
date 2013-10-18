@@ -1,0 +1,18 @@
+- title 'Кадры'
+
+pre.compile-from
+  code <mark>@keyframes</mark> anim {
+  code   to {
+  code     <mark>transform</mark>: rotate(360deg); } }
+
+pre.compile-to
+  code <mark>@-webkit-keyframes</mark> anim {
+  code   to {
+  code     <mark>-webkit-transform</mark>: rotate(360deg);
+  code     <mark>transform</mark>: rotate(360deg); } }
+  code= ' '
+  code <mark>@keyframes</mark> anim {
+  code   to {
+  code     <mark>-webkit-transform</mark>: rotate(360deg);
+  code     <mark>-ms-transform</mark>: rotate(360deg);
+  code     <mark>transform</mark>: rotate(360deg); } }

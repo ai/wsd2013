@@ -1,0 +1,17 @@
+- title 'Селекторы'
+
+pre.compile-from
+  code <mark>:fullscreen</mark> a {
+  code   <mark>transition</mark>: transform 1s }
+
+pre.compile-to
+  code <mark>:-webkit-full-screen</mark> a {
+  code   <mark>-webkit-transition</mark>: -webkit-transform 1s;
+  code   <mark>transition</mark>: transform 1s; }
+  code= ' '
+  code <mark>:-moz-full-screen</mark> a {
+  code   <mark>transition</mark>: transform 1s; }
+  code= ' '
+  code <mark>:fullscreen</mark> a {
+  code   <mark>-webkit-transition</mark>: -webkit-transform 1s;
+  code   <mark>transition</mark>: transform 1s; }
