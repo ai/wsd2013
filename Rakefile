@@ -218,12 +218,10 @@ desc 'Prepare commit to GitHub Pages'
 task :deploy => :build do
   sh ['git checkout gh-pages',
       'git rm index.html',
-      'git rm -r common/',
       'git rm -r slides/',
       'git rm -r vendor/',
       'cp -r public/* ./',
       'git add index.html',
-      'git add common/',
       'git add slides/',
       'git add vendor/'].join(' && ')
 end
