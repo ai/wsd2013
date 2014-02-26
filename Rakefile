@@ -227,3 +227,50 @@ task :deploy => :build do
       'git add slides/',
       'git add vendor/'].join(' && ')
 end
+
+desc 'Add new slide'
+task :add do
+  print "Slide name: "
+  name = STDIN.gets.strip
+
+  last = SLIDES.children.length + 1
+  print "Position [#{ last }]: "
+  pos = STDIN.gets.strip.to_i
+  pos = last if pos <= 0 or pos > last
+
+  if pos < last
+    SLIDES.children.sort[pos-1..-1].each do |from|
+      num, code = from.basename.to_s.split('_', 2)
+      num = (num.to_i + 1).to_s
+      num = '0'  + num if num.length == 1
+      to  = from.dirname.join("#{ num }_#{ code }")
+      from.rename(to)
+    end
+  end
+
+  num  = pos.to_s
+  num = '0'  + num if num.length == 1
+  slim = SLIDES.join("#{ num }_#{ name }/#{ name }.slim")
+
+  slim.dirname.mkpath
+  slim.open("w") { |io| io << "- title ''\n" }
+
+  sh "xdg-open #{ slim }"
+end
+
+desc 'Delete slide'
+task :del do
+  print "Slide position: "
+  pos = STDIN.gets.strip.to_i
+
+  dir = SLIDES.children.sort[pos - 1]
+  dir.rmtree
+
+  SLIDES.children.sort[pos-1..-1].each do |from|
+    num, code = from.basename.to_s.split('_', 2)
+    num = (num.to_i - 1).to_s
+    num = '0'  + num if num.length == 1
+    to = from.dirname.join("#{ num }_#{ code }")
+    from.rename(to)
+  end
+end
