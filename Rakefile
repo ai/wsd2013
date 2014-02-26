@@ -169,11 +169,6 @@ class Builder
       end
     end
 
-    if standalone?
-      `zip -j public/wsd2013.zip public/wsd2013.html`
-      FileUtils.rm PUBLIC.join('wsd2013.html')
-    end
-
     self
   end
 end
