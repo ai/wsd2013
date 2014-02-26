@@ -54,8 +54,8 @@ a {
 		background:$color;
 		color:#FFF;
 		text-align:center;
-		transform-origin: 50% 100%;
-		transform: rotate(45deg) translateY(-1em);
+		transform-origin:50% 100%;
+		transform:rotate(45deg) translateY(-1em);
 		}
 
 // Slide
@@ -119,7 +119,7 @@ a {
 	kbd, code, samp {
 		padding:2px 7px;
 		background:rgba(#000, 0.1);
-		tab-size: 4;
+		tab-size:4;
 		line-height:1;
 		font-family:'Anka Coder', monospace;
 		}
@@ -238,7 +238,7 @@ a {
 		background:#000;
 		@mixin cover {
 			img, svg, video,
-			object, canvas {
+			object, canvas, iframe {
 				@content;
 				}
 			}
@@ -252,21 +252,21 @@ a {
 			@include cover {
 				top:50%;
 				width:100%;
-				transform: translateY(-50%);
+				transform:translateY(-50%);
 				}
 			}
 		&.h {
 			@include cover {
 				left:50%;
 				height:100%;
-				transform: translateX(-50%);
+				transform:translateX(-50%);
 				}
 			}
 		&.w.h {
 			@include cover {
 				top:0;
 				left:0;
-				transform: none;
+				transform:none;
 				}
 			}
 		}
@@ -280,7 +280,11 @@ a {
 			right:96px;
 			color:#FFF;
 			font-size:100px;
-			transform: translateY(-50%);
+			transform:translateY(-50%);
+			a {
+				border-bottom:none;
+				color:#FFF;
+				}
 			}
 		}
 	// Place
@@ -288,15 +292,15 @@ a {
 		position:absolute;
 		top:50%;
 		left:50%;
-		transform: translate(-50%, -50%);
+		transform:translate(-50%, -50%);
 		&.t.l, &.t.r, &.b.r, &.b.l {
-			transform: none;
+			transform:none;
 			}
 		&.t, &.b {
-			transform: translate(-50%, 0);
+			transform:translate(-50%, 0);
 			}
 		&.l, &.r {
-			transform: translate(0, -50%);
+			transform:translate(0, -50%);
 			}
 		&.t, &.t.l, &.t.r {
 			top:0;
@@ -324,7 +328,7 @@ a {
 		padding:20px $right 20px $left;
 		background:#fafac4;
 		box-shadow:0 0 0 2px rgba(#000, 0.05);
-		transition: bottom 0.3s
+		transition:bottom 0.3s;
 		}
 	&:hover footer {
 		bottom:0;
@@ -355,12 +359,12 @@ a {
 			display:inline-block;
 			margin:($gap - $height/2) ($gap - $width/2) 0 0;
 			text-align:left;
-			transform-origin: 0 0;
-			transform: scale(0.5);
+			transform-origin:0 0;
+			transform:scale(0.5);
 			@media (max-width:$break) {
 				top:$height/2 + $height/4 - $gap;
 				margin:($gap - ($height/2 + $height/4)) ($gap - ($width/2 + $width/4)) 0 0;
-				transform: scale(0.25);
+				transform:scale(0.25);
 				}
 			// Frame
 			&:before {
@@ -372,12 +376,12 @@ a {
 				height:$height/2;
 				box-shadow:0 0 0 1px #DDD;
 				content:'';
-				transform-origin: 0 0;
-				transform: scale(2);
+				transform-origin:0 0;
+				transform:scale(2);
 				@media (max-width:$break) {
 					width:$width/4;
 					height:$height/4;
-					transform: scale(4);
+					transform:scale(4);
 					}
 				}
 			// Number
@@ -387,8 +391,8 @@ a {
 				padding-top:50px;
 				@media (max-width:$break) {
 					width:$width/2;
-					transform-origin: 0 0;
-					transform: scale(2);
+					transform-origin:0 0;
+					transform:scale(2);
 					}
 				}
 			// Hover
@@ -465,18 +469,18 @@ a {
 				&.right, &.up {
 					h2 {
 						opacity:0;
-						transition: all 0.4s ease-out;
+						transition:all 0.4s ease-out;
 						}
 					&:target h2 {
 						opacity:1;
-						transform: translateX(0) translateY(-50%);
+						transform:translateX(0) translateY(-50%);
 						}
 					}
 				&.right h2 {
-					transform: translateX(-100%) translateY(-50%);
+					transform:translateX(-100%) translateY(-50%);
 					}
 				&.up h2 {
-					transform: translateX(0) translateY(100%);
+					transform:translateX(0) translateY(100%);
 					}
 				}
 			}
@@ -494,7 +498,7 @@ a {
 				width:0;
 				height:8px;
 				background:$color;
-				transition: width 0.2s linear;
+				transition:width 0.2s linear;
 				}
 			}
 		}

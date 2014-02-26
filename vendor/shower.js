@@ -42,7 +42,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 		},
 
 		isLast : function() {
-			return shower.slideList.length === this.number + 1
+			return shower.slideList.length === this.number + 1;
 		},
 
 		/**
@@ -493,7 +493,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 	shower.first = function(callback) {
 		var slide = shower.slideList[shower.getCurrentSlideNumber()];
 
-		slide.timing && slide.stopTimer();
+		slide && slide.timing && slide.stopTimer();
 		shower.go(0);
 
 		if (typeof(callback) === 'function') {
@@ -508,7 +508,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 	shower.last = function(callback) {
 		var slide = shower.slideList[shower.getCurrentSlideNumber()];
 
-		slide.timing && slide.stopTimer();
+		slide && slide.timing && slide.stopTimer();
 		shower.go(shower.slideList.length - 1);
 
 		if (typeof(callback) === 'function') {
@@ -555,6 +555,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 		body.classList.add('list');
 
 		shower.clearPresenterNotes();
+		shower._applyTransform('none');
 
 		if (shower.isListMode()) {
 			return false;
@@ -569,7 +570,6 @@ window.shower = window.shower || (function(window, document, undefined) {
 		}
 
 		shower.scrollToSlide(currentSlideNumber);
-		shower._applyTransform('none');
 
 		if (typeof(callback) === 'function') {
 			callback();
@@ -599,12 +599,17 @@ window.shower = window.shower || (function(window, document, undefined) {
 	/**
 	* Get current slide number. Starts from zero. Warning: when you have
 	* slide number 1 in URL this method will return 0.
-	* If something is wrong return -1.
+	* If there is no slide number in url, return -1.
+	* If there is a slide number in url, but the slide does not exist, return 0.
 	* @returns {Number}
 	*/
 	shower.getCurrentSlideNumber = function() {
 		var i = shower.slideList.length - 1,
 			currentSlideId = url.hash.substr(1);
+
+		if (currentSlideId === '') {
+			return -1;
+		}
 
 		// As fast as you can ;-)
 		// http://jsperf.com/for-vs-foreach/46
@@ -614,7 +619,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 			}
 		}
 
-		return -1;
+		return 0;
 	};
 
 	/**
@@ -721,10 +726,10 @@ window.shower = window.shower || (function(window, document, undefined) {
 	};
 
 	/**
-	* Clear presenter notes in console.
+	* Clear presenter notes in console (only for Slide Mode).
 	*/
 	shower.clearPresenterNotes = function() {
-		if (window.console && window.console.clear) {
+		if (shower.isSlideMode() && window.console && window.console.clear) {
 			console.clear();
 		}
 	};
@@ -774,16 +779,62 @@ window.shower = window.shower || (function(window, document, undefined) {
 		return '#' + shower.slideList[slideNumber].id;
 	};
 
+	/**
+	 * Wheel event listener
+	 * @param e event
+	 */
+	shower.wheel = function (e) {
+		var body = document.querySelector('body'),
+			wheelDown,
+			lockedWheel = body.getAttribute('data-scroll') === 'locked';
+
+		if (!lockedWheel && !shower.isListMode()) {
+			body.setAttribute('data-scroll', 'locked');
+
+			if (e.deltaY === undefined) {
+				// Chrome, Opera, Safari
+				wheelDown = e.wheelDeltaY < 0;
+			} else {
+				// Firefox
+				wheelDown = e.deltaY > 0;
+			}
+
+			if (wheelDown) {
+				shower._turnNextSlide();
+			} else {
+				shower._turnPreviousSlide();
+			}
+
+			setTimeout(function () {
+				body.setAttribute('data-scroll', 'unlocked');
+			}, 200);
+		}
+	}
+
 	// Event handlers
 
 	window.addEventListener('DOMContentLoaded', function() {
-		if (body.classList.contains('full') || shower.isSlideMode()) {
-			shower.go(shower.getCurrentSlideNumber());
+		var currentSlideNumber = shower.getCurrentSlideNumber(),
+			isSlideMode = body.classList.contains('full') || shower.isSlideMode();
+
+		if (currentSlideNumber === -1 && isSlideMode) {
+			shower.go(0);
+		} else if (currentSlideNumber ===  0 || isSlideMode) {
+			shower.go(currentSlideNumber);
+		}
+
+		if (isSlideMode) {
 			shower.enterSlideMode();
 		}
 	}, false);
 
 	window.addEventListener('popstate', function() {
+		var currentSlideNumber = shower.getCurrentSlideNumber();
+
+		if (currentSlideNumber !== -1) {
+			shower.go(currentSlideNumber);
+		}
+
 		if (shower.isListMode()) {
 			shower.enterListMode();
 		} else {
@@ -894,11 +945,13 @@ window.shower = window.shower || (function(window, document, undefined) {
 	shower.init();
 
 	document.addEventListener('click', function(e) {
-		var slideNumber = shower.getSlideNumber(shower._getSlideIdByEl(e.target)),
+		var slideId = shower._getSlideIdByEl(e.target),
+			slideNumber,
 			slide;
 
 		// Click on slide in List mode
-		if (shower.isListMode() && shower._getSlideIdByEl(e.target)) {
+		if (slideId && shower.isListMode()) {
+			slideNumber = shower.getSlideNumber(slideId);
 			// Warning: go must be before enterSlideMode.
 			// Otherwise there is a bug in Chrome
 			shower.go(slideNumber);
@@ -913,11 +966,12 @@ window.shower = window.shower || (function(window, document, undefined) {
 	}, false);
 
 	document.addEventListener('touchstart', function(e) {
-		var slideNumber = shower.getSlideNumber(shower._getSlideIdByEl(e.target)),
+		var slideId = shower._getSlideIdByEl(e.target),
+			slideNumber,
 			slide,
 			x;
 
-		if (shower._getSlideIdByEl(e.target)) {
+		if (slideId) {
 			if (shower.isSlideMode() && ! shower._checkInteractiveElement(e)) {
 				x = e.touches[0].pageX;
 
@@ -929,9 +983,10 @@ window.shower = window.shower || (function(window, document, undefined) {
 			}
 
 			if (shower.isListMode()) {
+				slideNumber = shower.getSlideNumber(slideId);
 				// Warning: go must be before enterSlideMode.
 				// Otherwise there is a bug in Chrome
-				shower.go(shower.getSlideNumber(shower._getSlideIdByEl(e.target)));
+				shower.go(slideNumber);
 				shower.enterSlideMode();
 				shower.showPresenterNotes(slideNumber);
 
@@ -949,6 +1004,10 @@ window.shower = window.shower || (function(window, document, undefined) {
 			e.preventDefault();
 		}
 	}, false);
+
+	document.addEventListener('wheel', shower.wheel, false);
+
+	document.addEventListener('mousewheel', shower.wheel, false);
 
 	return shower;
 
