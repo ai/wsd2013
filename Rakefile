@@ -7,7 +7,7 @@ SLIDES = ROOT.join('slides')
 COMMON = ROOT.join('common')
 VENDOR = ROOT.join('vendor')
 
-require 'evil-front'
+require 'evil-front-all'
 JqueryCdn.local_url = proc { '/jquery.js' }
 
 class Pathname
