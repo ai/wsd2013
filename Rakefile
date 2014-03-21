@@ -54,7 +54,7 @@ class Builder
 
   def render(file, &block)
     @current = file
-    options  = { format: :html5, disable_escape: true }
+    options  = { format: :html5, disable_escape: true, pretty: false }
     Slim::Template.new(file.to_s, options).render(self, &block)
   end
 
