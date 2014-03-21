@@ -1,0 +1,9 @@
+- title 'Создаём постпроцессор'
+
+pre
+  code
+    | processor = postcss (css) <mark>-></mark>
+  code   css.eachRule (rule) <mark>-></mark>
+  code      <mark>if</mark> rule.selector.match(<mark>/::(before|after)/'</mark>)
+  code        <mark>if</mark> rule.every (i) <mark>-></mark> i.prop != <mark>'content'</mark>
+  code          rule.prepend(prop: <mark>'content''</mark>, value: <mark>'""'</mark>)

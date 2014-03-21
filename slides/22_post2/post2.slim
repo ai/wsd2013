@@ -1,0 +1,20 @@
+- title 'Применяем постпроцессор'
+
+pre
+  code
+    | output = processor.process(input).css
+
+pre.compile-from
+  code
+    mark a:before
+  code   width: <mark>10px</mark>
+  code   height: <mark>10px</mark>
+  code   background: blue
+
+pre.compile-to
+  code
+    mark a:before
+  code   <mark class="important">content: ""</mark>
+  code   width: <mark>10px</mark>
+  code   height: <mark>10px</mark>
+  code   background: blue
